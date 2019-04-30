@@ -90,6 +90,7 @@ func init() {
 	RegisterFunction("SQRTPI", makeMathWrapper("SQRTPI", func(v float64) float64 { return math.Sqrt(v * math.Pi) }))
 	// RegisterFunction("SUBTOTAL"
 	RegisterFunction("SUM", Sum)
+	RegisterFunction("SUMIF", SumIF)
 	// RegisterFunction("SUMIF",
 	// RegisterFunction("SUMIFS",
 	// RegisterFunction("SUMIFS",
@@ -1512,6 +1513,47 @@ func Sum(args []Result) Result {
 			return MakeErrorResult(fmt.Sprintf("unhandled SUM() argument type %s", a.Type))
 		}
 	}
+	return res
+}
+
+// Sum is an implementation of the Excel SUM() function.
+func SumIF(args []Result) Result {
+	// Sum returns zero with no arguments
+	res := MakeNumberResult(0)
+
+	if len(args) < 2 || len(args) > 3{
+		return MakeErrorResult("SUMIF() needs 2 or 3 parameters")
+	}
+
+	cond := args[1]
+	switch cond.Type{
+	case ResultTypeNumber:
+
+	}
+
+
+	//for _, a := range args {
+	//	a = a.AsNumber()
+	//	switch a.Type {
+	//	case ResultTypeNumber:
+	//		res.ValueNumber += a.ValueNumber
+	//	case ResultTypeList, ResultTypeArray:
+	//		subSum := Sum(a.ListValues())
+	//		// error as sum returns only numbers and errors
+	//		if subSum.Type != ResultTypeNumber {
+	//			return subSum
+	//		}
+	//		res.ValueNumber += subSum.ValueNumber
+	//	case ResultTypeString:
+	//		// treated as zero by Excel
+	//	case ResultTypeError:
+	//		return a
+	//	case ResultTypeEmpty:
+	//		// skip
+	//	default:
+	//		return MakeErrorResult(fmt.Sprintf("unhandled SUM() argument type %s", a.Type))
+	//	}
+	//}
 	return res
 }
 

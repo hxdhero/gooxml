@@ -1516,21 +1516,43 @@ func Sum(args []Result) Result {
 	return res
 }
 
+type IfOpType byte
+
+const (
+	IfOpEQ IfOpType = iota
+	IfOpNE
+	IfOpLT
+	IfOpGT
+	IfOpLTE
+	IfOpGTE
+	IfOpLIKE
+)
+
 // Sum is an implementation of the Excel SUM() function.
 func SumIF(args []Result) Result {
 	// Sum returns zero with no arguments
 	res := MakeNumberResult(0)
 
-	if len(args) < 2 || len(args) > 3{
+	if len(args) < 2 || len(args) > 3 {
 		return MakeErrorResult("SUMIF() needs 2 or 3 parameters")
 	}
 
-	cond := args[1]
-	switch cond.Type{
-	case ResultTypeNumber:
-
+	// condData 用于判断的数据 targetData 用于计算的数据.
+	var condData, targetData Result
+	condData = args[0]
+	if len(args) == 2 {
+		targetData = args[0]
+	} else {
+		targetData = args[1]
 	}
 
+	// 用于判断的条件.
+	cond := args[1]
+	switch cond.Type {
+	// 如果是数值类型 判断是否相等
+	case ResultTypeNumber:
+		sumif(condData, targetData, BinOpTypeEQ, cond.ValueNumber)
+	}
 
 	//for _, a := range args {
 	//	a = a.AsNumber()
@@ -1554,6 +1576,16 @@ func SumIF(args []Result) Result {
 	//		return MakeErrorResult(fmt.Sprintf("unhandled SUM() argument type %s", a.Type))
 	//	}
 	//}
+	return res
+}
+
+func sumif(conData, targetData Result, compareType BinOpType, cond interface{}) Result {
+	res := MakeNumberResult(0)
+	switch conData.Type {
+	case ResultTypeList:
+
+	}
+
 	return res
 }
 
